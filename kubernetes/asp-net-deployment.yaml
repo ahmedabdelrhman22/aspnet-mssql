@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: asp-net-deployment
+  labels:
+    app: asp-net
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: asp-net
+  template:
+    metadata:
+      labels:
+        app: asp-net
+    spec:
+      containers:
+      - name: asp-net
+        image: redis
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 5001
+        env:
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_HOST
+          value: redis
+          - name: root_user
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: root_user
+          - name: root_password
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: root_password
